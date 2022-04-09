@@ -47,6 +47,7 @@ vgg_losses = {\
 
 fake_datasets = {\
 	'GTA':ds.PfDDataset,
+	'Stencil':ds.StencilDataset
 }
 
 

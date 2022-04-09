@@ -132,6 +132,8 @@ class GBufferEncoder(nn.Module):
 			pass
 
 		num_classes = classmap.shape[1]
+		moo = torch.ones((gbuffers.shape[0], 1, gbuffers.shape[2], gbuffers.shape[3]))
+		logging.debug(f"SHAPE: {moo.shape} {gbuffers.shape}")
 		features = 0
 		for c in range(num_classes):
 			features += classmap[:,c,:,:] * self.class_encoders[c](\

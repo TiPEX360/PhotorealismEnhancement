@@ -25,8 +25,8 @@ class ImageDataset(torch.utils.data.Dataset):
 
 		img_paths  = [Path(p[0] if type(p) is tuple else p) for p in img_paths]
 		self.paths = sorted([p for p in img_paths if p.is_file() and p.suffix in ['.jpg', '.png']])
-		
-		self._path2id    = {p.stem:i for i,p in enumerate(self.paths)}
+		"""Dictionary"""
+		self._path2id    = {p.stem:i for i,p in enumerate(self.paths)} #dictionary of filename to enum id
 		self.transform   = transform
 		
 		self.name = name
@@ -37,7 +37,7 @@ class ImageDataset(torch.utils.data.Dataset):
 
 	def _load_img(self, path):
 		try:
-			return np.clip(imageio.imread(path).astype(np.float32) / 255.0, 0.0, 1.0)[:,:,:3]
+			return np.clip(imageio.imread(path).astype(np.float32) / 255.0, 0.0, 1.0)[:,:,:3] #normalise and clip between 0 and 1. RGB channels only
 		except:
 			logging.exception(f'Failed to load {path}.')
 			raise

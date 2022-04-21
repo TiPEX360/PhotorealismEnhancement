@@ -3,7 +3,7 @@ weight_dir: # path to folder where checkpoints should be stored
 
 common:
   unpin: false # disable pinning for the loader
-  batch_size: 1
+  batch_size: 10
   num_loaders: 14
   log_interval: 1 # print losses every X iterations
   seed: 1

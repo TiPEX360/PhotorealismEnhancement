@@ -1,0 +1,84 @@
+---
+weight_dir: ./savegames_half/
+name_load: stencil2houzz_half-345000
+
+common:
+  unpin: false
+  batch_size: 1
+  num_loaders: 28 #this should be num cpus (maybe cores)
+  log_interval: 1
+  seed: 1  
+
+train:
+  max_epochs: -1
+  max_iterations: 500000
+  save_epochs: -1
+  save_iterations: 5000
+  name_save: stencil2houzz_half
+  shuffle_train: true
+  val_interval: 125000
+   
+test:
+  shuffle_test: false
+
+real_dataset:
+  name: Houzz
+  filelist: ./data/half/Houzz/files.txt
+
+fake_dataset: 
+  name: Stencil
+  train_filelist: ./data/half/Stencil/train.txt
+  val_filelist: ./data/half/Stencil/val.txt 
+  test_filelist: ./data/half/Stencil/test.txt 
+  sampling: 
+    type: 'matching'
+    matched_crop_path: ./data/half/matches/matched_crops_Stencil-Houzz.csv
+    crop_weight_path: ./data/half/matches/crop_weights_Stencil-Houzz.npz
+
+generator:
+  type: hr
+  config:
+    encoder_type: ENCODER
+    stem_norm: group
+    num_stages: 4
+    other_norm: group
+    gbuffer_norm: RAD
+    gbuffer_encoder_norm: residual
+    num_gbuffer_layers: 3
+  optimizer:
+    type: adam
+    learning_rate: 0.0001
+    adam_beta: 0.9
+    adam_beta2: 0.999
+    clip_gradient_norm: 1000
+  scheduler:
+    type: 'step'
+    step: 100000
+    gamma: 0.5
+    
+discriminator:
+  type: ppde
+  run_always: false
+  config:
+    norm: group
+    num_layers: 4
+    max_dim: 256
+  optimizer:
+    type: adam
+    learning_rate: 0.0001 
+    adam_beta: 0.9
+    adam_beta2: 0.999
+    clip_gradient_norm: 1000
+  scheduler:
+    type: 'step'
+    step: 1000000
+    gamma: 0.5
+    
+objectives:
+  gan: ls
+  perceptual:
+    type: 'lpips_vgg'
+    weight: 1
+  reg:
+    weight: 0.03
+...
